@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 https://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+
+    <groupId>cs315</groupId>
+    <artifactId>mvc-car-dealership</artifactId>
+    <version>1.0.0</version>
+    <packaging>jar</packaging>
+
+    <name>MVCCarDealership</name>
+    <description>Java MVC car dealership application</description>
+
+    <properties>
+        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+        <maven.compiler.release>8</maven.compiler.release>
+
+        <sonar.projectKey>MVCCarDealership</sonar.projectKey>
+        <sonar.projectName>MVCCarDealership</sonar.projectName>
+        <sonar.host.url>http://localhost:9000</sonar.host.url>
+        <sonar.exclusions>**/*.form</sonar.exclusions>
+    </properties>
+
+    <!-- Mantém o layout original do projeto NetBeans de terceiros. -->
+    <build>
+        <sourceDirectory>${project.basedir}/src</sourceDirectory>
+        <plugins>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-compiler-plugin</artifactId>
+                <version>3.14.1</version>
+                <configuration>
+                    <release>${maven.compiler.release}</release>
+                </configuration>
+            </plugin>
+
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-jar-plugin</artifactId>
+                <version>3.4.2</version>
+                <configuration>
+                    <archive>
+                        <manifest>
+                            <mainClass>cs315.mvccardealership.Cs315MVCCarDealership</mainClass>
+                        </manifest>
+                    </archive>
+                </configuration>
+            </plugin>
+
+            <plugin>
+                <groupId>org.sonarsource.scanner.maven</groupId>
+                <artifactId>sonar-maven-plugin</artifactId>
+                <version>5.5.0.6356</version>
+            </plugin>
+        </plugins>
+    </build>
+</project>
