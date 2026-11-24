@@ -33,19 +33,31 @@ O JAR executável será criado em
 java -jar target/mvc-car-dealership-1.0.0.jar
 ```
 
-## Analisar com SonarQube
+## Analisar com SonarQube Cloud pelo GitHub Actions
 
-Inicie o SonarQube e execute:
+O workflow `.github/workflows/sonarqube.yml` compila o projeto com Maven e
+envia a análise para o projeto
+`JoaoVictorCostaBarbosa_MVCCarDealership`. Ele é executado em pushes para
+`master`, em pull requests destinados a `master` e manualmente pela aba
+**Actions** do GitHub.
+
+Antes da primeira execução:
+
+1. No SonarQube Cloud, acesse **Administration > Analysis Method** e desative
+   **Automatic Analysis**. Para Java, deve ser usada a análise baseada em CI.
+2. No GitHub, acesse **Settings > Secrets and variables > Actions** e crie um
+   *Repository secret* chamado `SONAR_TOKEN`, usando o token gerado pelo
+   SonarQube Cloud.
+
+Para testar a mesma análise localmente:
 
 ```bash
-./mvnw clean verify sonar:sonar \
-  -Dsonar.host.url=http://localhost:9000 \
-  -Dsonar.token=SEU_TOKEN
+SONAR_TOKEN=SEU_TOKEN ./mvnw clean verify sonar:sonar
 ```
 
-O projeto será publicado no SonarQube com a chave
-`MVCCarDealership`. Tanto a URL quanto a chave podem ser sobrescritas na linha
-de comando, por exemplo com `-Dsonar.projectKey=outra-chave`.
+Depois da execução, o log deve informar que os oito arquivos Java foram
+indexados e analisados. O resultado fica disponível na interface do SonarQube
+Cloud.
 
 O código original permanece em `src/` para preservar o layout do projeto de
 terceiros. O `pom.xml` configura esse diretório como fonte do Maven; os arquivos

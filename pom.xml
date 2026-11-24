@@ -16,9 +16,10 @@
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <maven.compiler.release>8</maven.compiler.release>
 
-        <sonar.projectKey>MVCCarDealership</sonar.projectKey>
+        <sonar.projectKey>JoaoVictorCostaBarbosa_MVCCarDealership</sonar.projectKey>
+        <sonar.organization>joaovictorcostabarbosa</sonar.organization>
         <sonar.projectName>MVCCarDealership</sonar.projectName>
-        <sonar.host.url>http://localhost:9000</sonar.host.url>
+        <sonar.host.url>https://sonarcloud.io</sonar.host.url>
         <sonar.exclusions>**/*.form</sonar.exclusions>
     </properties>
 
