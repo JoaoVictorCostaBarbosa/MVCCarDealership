@@ -51,3 +51,4 @@ O código original permanece em `src/` para preservar o layout do projeto de
 terceiros. O `pom.xml` configura esse diretório como fonte do Maven; os arquivos
 antigos do NetBeans/Ant foram mantidos apenas como referência histórica.
 
+
