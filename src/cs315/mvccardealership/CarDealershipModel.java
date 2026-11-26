@@ -15,6 +15,7 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.text.DateFormat;
+import java.util.Objects;
 
 /**
  *
@@ -137,7 +138,8 @@ public class CarDealershipModel
         for(ModelCustomer c : Customers){
             String currentCustomerFN = c.getFirstName();
             String currentCustomerLN = c.getLastName();
-            if(currentCustomerFN == firstName && currentCustomerLN == lastName)
+            if(Objects.equals(currentCustomerFN, firstName)
+                    && Objects.equals(currentCustomerLN, lastName))
             {
                 returnCustomer = c;  
                 return returnCustomer;
@@ -162,7 +164,8 @@ public class CarDealershipModel
         {
             String currentCustomerFN = c.getFirstName();
             String currentCustomerLN = c.getLastName();
-            if(currentCustomerFN == firstName && currentCustomerLN == lastName)
+            if(Objects.equals(currentCustomerFN, firstName)
+                    && Objects.equals(currentCustomerLN, lastName))
             {
                 customer = c; 
                 customerID = c.getCustomerID();
@@ -209,7 +212,7 @@ public class CarDealershipModel
         String servicePerform = " ";
         for (ModelServiceSchedule s : ServiceSchedules) {
             servicePerform = s.getServicePerformed();
-            if (servicePerform == service) {
+            if (Objects.equals(servicePerform, service)) {
                 returnArray.add(s);
             }
 
@@ -226,20 +229,26 @@ public class CarDealershipModel
         String strInput = "";
         int intCurrentID = 0;
         lastCustomerID = 0;
-        FileReader inputFile = new FileReader("CustomerFile.txt");
-        BufferedReader customerFile = new BufferedReader(inputFile);
-        while ((strInput = customerFile.readLine()) != null)
+        try (BufferedReader customerFile = new BufferedReader(
+                new FileReader("CustomerFile.txt")))
         {
-            String[] strArrayInput = strInput.split(",");
-            
-            intCurrentID = Integer.parseInt(strArrayInput[8]);
-            if (intCurrentID > lastCustomerID)
+            while ((strInput = customerFile.readLine()) != null)
             {
-                lastCustomerID = intCurrentID;
-            
-            new ModelCustomer(strArrayInput[0], strArrayInput[1], strArrayInput[2],
-                    strArrayInput[3], strArrayInput[4], strArrayInput[5],
-                    strArrayInput[6], strArrayInput[7], intCurrentID);
+                String[] strArrayInput = strInput.split(",");
+                if (strArrayInput.length < 9)
+                {
+                    continue;
+                }
+
+                intCurrentID = Integer.parseInt(strArrayInput[8]);
+                if (intCurrentID > lastCustomerID)
+                {
+                    lastCustomerID = intCurrentID;
+
+                    new ModelCustomer(strArrayInput[0], strArrayInput[1], strArrayInput[2],
+                            strArrayInput[3], strArrayInput[4], strArrayInput[5],
+                            strArrayInput[6], strArrayInput[7], intCurrentID);
+                }
             }
         }
         lastCustomerID = intCurrentID;
@@ -247,100 +256,116 @@ public class CarDealershipModel
         strInput = "";
         intCurrentID = 0;
         lastVehicleID = 0;
-        FileReader inputVehicleFile = new FileReader("VehicleFile.txt");
-        BufferedReader vehicleFile = new BufferedReader(inputVehicleFile);
-        while ((strInput = vehicleFile.readLine()) != null)
+        try (BufferedReader vehicleFile = new BufferedReader(
+                new FileReader("VehicleFile.txt")))
         {
-            String[] strArrayInput = strInput.split(",");
-            
-            intCurrentID = Integer.parseInt(strArrayInput[5]);
-            if (intCurrentID > lastVehicleID)
+            while ((strInput = vehicleFile.readLine()) != null)
             {
-                lastVehicleID = intCurrentID;
-            
-            new ModelVehicle(strArrayInput[0],
-                    strArrayInput[1],
-                    strArrayInput[2],
-                    strArrayInput[3],
-                    Integer.parseInt(strArrayInput[4]),
-                    intCurrentID);
-            }
-        }       
-        lastVehicleID = intCurrentID;
+                String[] strArrayInput = strInput.split(",");
+                if (strArrayInput.length < 6)
+                {
+                    continue;
+                }
 
-        vehicleFile.close();
+                intCurrentID = Integer.parseInt(strArrayInput[5]);
+                if (intCurrentID > lastVehicleID)
+                {
+                    lastVehicleID = intCurrentID;
+
+                    new ModelVehicle(strArrayInput[0],
+                            strArrayInput[1],
+                            strArrayInput[2],
+                            strArrayInput[3],
+                            Integer.parseInt(strArrayInput[4]),
+                            intCurrentID);
+                }
+            }
+        }
+        lastVehicleID = intCurrentID;
         
         strInput = "";
         intCurrentID = 0;
         lastServiceID = 0;
-        FileReader inputServiceScheduleFile = new FileReader("ServiceScheduleFile.txt");
-        BufferedReader serviceScheduleFile = new BufferedReader(inputServiceScheduleFile);
-        while ((strInput = serviceScheduleFile.readLine()) != null)
+        try (BufferedReader serviceScheduleFile = new BufferedReader(
+                new FileReader("ServiceScheduleFile.txt")))
         {
-            String[] strArrayInput = strInput.split(",");
-            
-            intCurrentID = Integer.parseInt(strArrayInput[7]);
-            if (intCurrentID > lastServiceID)
+            while ((strInput = serviceScheduleFile.readLine()) != null)
             {
-                lastServiceID = intCurrentID;
-                
-                String startServiceDateString = strArrayInput[2];
-                DateFormat serviceDateFormat = new SimpleDateFormat("MM/dd/yyyy"); 
-                Date serviceDate;
-                try
+                String[] strArrayInput = strInput.split(",");
+                if (strArrayInput.length < 8)
                 {
-                    serviceDate = serviceDateFormat.parse(startServiceDateString);
+                    continue;
                 }
-                catch (Exception e)
+
+                intCurrentID = Integer.parseInt(strArrayInput[7]);
+                if (intCurrentID > lastServiceID)
                 {
-                    serviceDate = null;
+                    lastServiceID = intCurrentID;
+
+                    String startServiceDateString = strArrayInput[2];
+                    DateFormat serviceDateFormat = new SimpleDateFormat("MM/dd/yyyy");
+                    Date serviceDate;
+                    try
+                    {
+                        serviceDate = serviceDateFormat.parse(startServiceDateString);
+                    }
+                    catch (Exception e)
+                    {
+                        serviceDate = null;
+                    }
+
+                    String nextServiceDateString = strArrayInput[2];
+                    DateFormat nextServiceDateFormat = new SimpleDateFormat("MM/dd/yyyy");
+                    Date nextServiceDate;
+                    try
+                    {
+                        nextServiceDate = nextServiceDateFormat.parse(nextServiceDateString);
+                    }
+                    catch (Exception e)
+                    {
+                        nextServiceDate = null;
+                    }
+
+                    new ModelServiceSchedule(
+                            Double.parseDouble(strArrayInput[0]),
+                            strArrayInput[1],
+                            serviceDate,
+                            nextServiceDate,
+                            intCurrentID,
+                            Integer.parseInt(strArrayInput[5]),
+                            Integer.parseInt(strArrayInput[6]));
                 }
-                
-                String nextServiceDateString = strArrayInput[2];
-                DateFormat nextServiceDateFormat = new SimpleDateFormat("MM/dd/yyyy"); 
-                Date nextServiceDate;
-                try
-                {
-                    nextServiceDate = nextServiceDateFormat.parse(nextServiceDateString);
-                }
-                catch (Exception e)
-                {
-                    nextServiceDate = null;
-                }
-                
-                new ModelServiceSchedule(
-                        Double.parseDouble(strArrayInput[0]),
-                        strArrayInput[1],
-                        serviceDate,
-                        nextServiceDate,
-                        intCurrentID,
-                        Integer.parseInt(strArrayInput[5]),
-                        Integer.parseInt(strArrayInput[6]));
             }
-        }       
+        }
         lastServiceID = intCurrentID;        
         
         strInput = "";
         intCurrentID = 0;
         lastServiceListID = 0;
-        FileReader inputServiceListFile = new FileReader("ServiceScheduleFile.txt");
-        BufferedReader serviceListFile = new BufferedReader(inputServiceListFile);
-        while ((strInput = serviceListFile.readLine()) != null)
+        try (BufferedReader serviceListFile = new BufferedReader(
+                new FileReader("ServiceScheduleFile.txt")))
         {
-            String[] strArrayInput = strInput.split(",");
-            
-            intCurrentID = Integer.parseInt(strArrayInput[4]);
-            if (intCurrentID > lastServiceListID)
+            while ((strInput = serviceListFile.readLine()) != null)
             {
-                lastServiceListID = intCurrentID;
-                
-                new ModelServiceList(
-                        strArrayInput[0],
-                        strArrayInput[1],
-                        Double.parseDouble(strArrayInput[2]),
-                        intCurrentID);
+                String[] strArrayInput = strInput.split(",");
+                if (strArrayInput.length < 5)
+                {
+                    continue;
+                }
+
+                intCurrentID = Integer.parseInt(strArrayInput[4]);
+                if (intCurrentID > lastServiceListID)
+                {
+                    lastServiceListID = intCurrentID;
+
+                    new ModelServiceList(
+                            strArrayInput[0],
+                            strArrayInput[1],
+                            Double.parseDouble(strArrayInput[2]),
+                            intCurrentID);
+                }
             }
-        }       
+        }
         lastServiceListID = intCurrentID;
     }
     
